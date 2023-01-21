@@ -27,10 +27,10 @@ normal_sprite = f"buttons/CheckBox06.png"
 hard_sprite = f"buttons/CheckBox06.png"
 
 difficulty = "Easy"
-
 score = 0
-
 state = "MainMenu"
+player_name = ""
+max_character = 8
 
 
 class Button:
@@ -108,11 +108,55 @@ def new_game():
 def change_state(s):
     global state, score
     button_sound = pygame.mixer.Sound("Sounds/button_sound.mp3")
-    if state != "Win":
+    if s == "MainMenu":
+        check_new_score(player_name, score)
         score = 0
-    state = s
-    button_sound.play()
-    new_game()
+    elif state != "Win":
+        if score != 0:
+            check_new_score(player_name, score)
+        score = 0
+    if player_name:
+        state = s
+        button_sound.play()
+        new_game()
+
+
+def save_score(player_name, score):
+    try:
+        with open("scores.json", "r") as f:
+            data = json.load(f)
+    except:
+        data = {}
+    data[player_name] = score
+    with open("scores.json", "w") as f:
+        json.dump(data, f)
+
+
+def check_new_score(player_name, new_score):
+    try:
+        with open("scores.json", "r") as f:
+            data = json.load(f)
+    except:
+        data = {}
+    if player_name in data:
+        previous_score = data[player_name]
+        if new_score > previous_score:
+            save_score(player_name, new_score)
+    else:
+        save_score(player_name, new_score)
+
+
+def print_top_scores():
+    y_offset = 0
+    try:
+        with open("scores.json", "r") as f:
+            data = json.load(f)
+    except:
+        data = {}
+    sorted_scores = sorted(data.items(), key=lambda x: x[1], reverse=True)
+    for i in range(min(5, len(sorted_scores))):
+        display_surface.blit(pygame.font.Font(text_font, 70).render(f"{i+1}. {sorted_scores[i][0]}: {sorted_scores[i][1]}", True, white), (80, 180 + y_offset))
+        y_offset += 100
 
 
 def change_difficulty(dif):
@@ -146,6 +190,10 @@ def change_difficulty(dif):
         easy_sprite = check_sprite
     else:
         easy_sprite = uncheck_sprite
+
+
+def insert_scoreboard():
+    pass
 
 
 pygame.init()
@@ -191,6 +239,7 @@ game_message_rect = (762, 190)
 # __________________ #
 
 # UI for MainMenu #
+name_UI = pygame.transform.scale(pygame.image.load("buttons/Msg20.png"), (300, 100))
 score_board_UI = pygame.transform.scale(pygame.image.load("buttons/Msg20.png"), (650, 705))
 score_ICON = pygame.transform.scale(pygame.image.load("buttons/Icon54.png"), (80, 80))
 score_UI = pygame.image.load("buttons/Button05.png")
@@ -239,6 +288,13 @@ def render_state(game_state):
         hard_check_UI.render(display_surface)
         normal_check_UI.render(display_surface)
         easy_check_UI.render(display_surface)
+        display_surface.blit(name_UI, (720, 100))
+        player_name_ui = font.render(player_name, True, (255, 255, 255))
+        display_surface.blit(player_name_ui, (870 - (9 * len(player_name)), 140))
+        if len(player_name) == 0:
+            player_name_placeholder = font.render("Enter name", True, (255, 255, 255))
+            display_surface.blit(player_name_placeholder, (785, 140))
+        print_top_scores()
 
     elif game_state == "Play" or state == "Loose" or state == "Win":
         display_surface.fill(white)
@@ -321,6 +377,10 @@ while True:
                         show_command_message("character already used !!!", 2)
                         type_keyboard.play()
                     letter_use += chr(event.key)
+                if event.unicode.isalpha() and len(player_name) <= max_character and event.key in range(96, 123) and state == "MainMenu":
+                    player_name += event.unicode
+                elif event.key == K_BACKSPACE:
+                    player_name = player_name[:-1]
                 if event.key == 13 and state in ["Loose", "Win", "MainMenu"]:
                     change_state("Play")
                 if event.key == 27 and state in ["Loose", "Win", "Play"]:
