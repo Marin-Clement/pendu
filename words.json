@@ -1,12 +1,12 @@
 {
-  "easy": [
+  "Easy": [
     "ibis",
     "seau",
     "vert",
     "yogi",
     "gifle"
   ],
-  "normal": [
+  "Normal": [
     "menthe",
     "oiseau",
     "podium",
@@ -14,9 +14,9 @@
     "puzzle",
     "quartz"
   ],
-  "hard": [
+  "Hard": [
     "horoscope",
-    "intrépide",
+    "intrepide",
     "klaxonner",
     "mascarade",
     "xylophone"
