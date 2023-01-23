@@ -99,7 +99,7 @@ def new_game():
     for i in range(7):
         image = pygame.image.load(f"images/hangman{i}.png")
         images.append(image)
-    with open("words.json") as jsonFile:
+    with open("Data/words.json") as jsonFile:
         data = json.load(jsonFile)
         word = random.choice(data[difficulty])
     write_word()
@@ -130,18 +130,18 @@ def change_state(s):
 
 def save_score(player_name, score):
     try:
-        with open("scores.json", "r") as f:
+        with open("Data/scores.json", "r") as f:
             data = json.load(f)
     except:
         data = {}
     data[player_name] = score
-    with open("scores.json", "w") as f:
+    with open("Data/scores.json", "w") as f:
         json.dump(data, f)
 
 
 def check_new_score(player_name, new_score):
     try:
-        with open("scores.json", "r") as f:
+        with open("Data/scores.json", "r") as f:
             data = json.load(f)
     except:
         data = {}
@@ -156,7 +156,7 @@ def check_new_score(player_name, new_score):
 def print_top_scores():
     y_offset = 0
     try:
-        with open("scores.json", "r") as f:
+        with open("Data/scores.json", "r") as f:
             data = json.load(f)
     except:
         data = {}
