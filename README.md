@@ -12,11 +12,6 @@
 <p>The game uses a json file "words.json" to get the words according to the difficulty level. <br>
   The game uses a json file "scores.json" to save the score of the player after the game is over.
 </p>
-<h2>Future Enhancements</h2>
-<ul>
-  <li>Adding a hint feature to give the player a hint about the word.</li>
-  <li>Adding sound effects and background music.</li>
-</ul>
 <h2>Author</h2>
 <ul>
   <li><strong>Author Name</strong> - <a href="https://github.com/Marin-Clement" target="_new">Marin-Clement</a></li>
