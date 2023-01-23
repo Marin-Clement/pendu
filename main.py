@@ -228,7 +228,7 @@ red = (255, 0, 0)
 X = 1080
 Y = 720
 
-text_font = 'Sugar Snow.ttf'
+text_font = 'Font/Sugar Snow.ttf'
 
 display_surface = pygame.display.set_mode((X, Y))
 
