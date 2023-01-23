@@ -108,6 +108,13 @@ def new_game():
 def change_state(s):
     global state, score
     button_sound = pygame.mixer.Sound("Sounds/button_sound.mp3")
+    if state == "Win":
+        if difficulty == "Easy":
+            score += 500
+        elif difficulty == "Normal":
+            score += 750
+        elif difficulty == "Hard":
+            score += 1000
     if s == "MainMenu":
         check_new_score(player_name, score)
         score = 0
@@ -161,6 +168,7 @@ def print_top_scores():
 
 def change_difficulty(dif):
     global hard_check, normal_check, easy_check, hard_sprite, normal_sprite, easy_sprite, difficulty
+    good.play()
     uncheck_sprite = f"buttons/CheckBox06.png"
     check_sprite = f"buttons/CheckBox10.png"
     if dif == "Hard":
@@ -192,10 +200,6 @@ def change_difficulty(dif):
         easy_sprite = uncheck_sprite
 
 
-def insert_scoreboard():
-    pass
-
-
 pygame.init()
 pygame.mixer.init()
 
@@ -206,6 +210,13 @@ good = pygame.mixer.Sound("Sounds/good.mp3")
 type_keyboard = pygame.mixer.Sound("Sounds/type.mp3")
 error = pygame.mixer.Sound("Sounds/error.mp3")
 loose = pygame.mixer.Sound("Sounds/loose.mp3")
+
+
+# MUSICS
+pygame.mixer.music.load("Musics/Song1.mp3")
+pygame.mixer.music.set_volume(0.3)
+pygame.mixer.music.play(-1)
+
 
 # COLORS
 grey = (50, 50, 50)
@@ -324,7 +335,6 @@ def render_state(game_state):
             continue_button.render(display_surface)
             display_surface.blit(continue_button_text, (790, 492))
 
-
 while True:
     score_text = pygame.font.Font(text_font, 30).render(str(score), True, white)
     for event in pygame.event.get():
@@ -378,8 +388,10 @@ while True:
                         type_keyboard.play()
                     letter_use += chr(event.key)
                 if event.unicode.isalpha() and len(player_name) <= max_character and event.key in range(96, 123) and state == "MainMenu":
+                    type_keyboard.play()
                     player_name += event.unicode
                 elif event.key == K_BACKSPACE:
+                    error.play()
                     player_name = player_name[:-1]
                 if event.key == 13 and state in ["Loose", "Win", "MainMenu"]:
                     change_state("Play")
